@@ -1,0 +1,1543 @@
+{
+  "name": "AI Employee for Youtube and LinkedIn Analysis copy",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "video",
+        "returnAll": true,
+        "filters": {
+          "channelId": "<CHANNEL ID>",
+          "publishedAfter": "={{ new Date(Date.now() - 7*24*60*60*1000).toISOString() }}"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        368,
+        -608
+      ],
+      "id": "24559020-85d4-4c3c-942e-a1f5788b9055",
+      "name": "Get last week videos",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "MJIRrOYvzihyq8da",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "Run actor and get dataset",
+        "actorSource": "store",
+        "actorId": {
+          "__rl": true,
+          "value": "yZnhB5JewWf9xSmoM",
+          "mode": "list",
+          "cachedResultName": "Linkedin Profile Scraper \u2705 No cookie - $3/1k (supreme_coder/linkedin-profile-scraper)",
+          "cachedResultUrl": "https://console.apify.com/actors/yZnhB5JewWf9xSmoM/input"
+        },
+        "customBody": "{\n    \"findContacts\": false,\n    \"scrapeCompany\": false,\n    \"urls\": [\n        {\n            \"url\": \"https://www.linkedin.com/in/YOUR-LINKEDIN-USERNAME/\"\n        }\n    ]\n}",
+        "authentication": "apifyOAuth2Api"
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        368,
+        -176
+      ],
+      "id": "0c379b80-4e24-438e-8ba9-c4d62ec35699",
+      "name": "Linkedin_account_scraping",
+      "credentials": {
+        "apifyOAuth2Api": {
+          "id": "9lKIBDgGIaqzXtJs",
+          "name": "Apify account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "Run actor and get dataset",
+        "actorSource": "store",
+        "actorId": {
+          "__rl": true,
+          "value": "A3cAPGpwBEG8RJwse",
+          "mode": "list",
+          "cachedResultName": "LinkedIn Profile Posts Scraper (No Cookies)\u26a1$2 per 1k (harvestapi/linkedin-profile-posts)",
+          "cachedResultUrl": "https://console.apify.com/actors/A3cAPGpwBEG8RJwse/input"
+        },
+        "customBody": "{\n    \"includeQuotePosts\": true,\n    \"includeReposts\": true,\n    \"maxComments\": 5,\n    \"maxPosts\": 5,\n    \"maxReactions\": 5,\n    \"postedLimit\": \"month\",\n    \"scrapeComments\": false,\n    \"scrapeReactions\": false,\n    \"targetUrls\": [\n        \"https://www.linkedin.com/in/YOUR-LINKEDIN-USERNAME/\"\n    ]\n}",
+        "timeout": {},
+        "authentication": "apifyOAuth2Api"
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        144,
+        16
+      ],
+      "id": "003a9108-c7e2-484d-bc91-6d278ea122cd",
+      "name": "Linkedin_post_scraper",
+      "credentials": {
+        "apifyOAuth2Api": {
+          "id": "9lKIBDgGIaqzXtJs",
+          "name": "Apify account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1728,
+        -912
+      ],
+      "id": "565b2c87-5613-4598-aec1-c2f8822654a6",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "3fQdSrQVSRsExiXz",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        1856,
+        -912
+      ],
+      "id": "43932d0b-69d5-470d-be34-d98f4e8ebf71",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        1792,
+        -416
+      ],
+      "id": "a27bdff2-a93b-4872-9a19-8102bde43c55",
+      "name": "Calculator1"
+    },
+    {
+      "parameters": {
+        "content": "# Youtube & LinkedIn AI Employee for Profile and Channel analysis",
+        "height": 1584,
+        "width": 3104
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -1168
+      ],
+      "typeVersion": 1,
+      "id": "d1862471-f10c-4f07-88f2-ab33b20563a3",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "months",
+              "triggerAtDayOfMonth": 30,
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -80,
+        -272
+      ],
+      "id": "eaaa84e5-87a4-4b2f-bc48-719ad334d254",
+      "name": "Monthly Review with Date"
+    },
+    {
+      "parameters": {
+        "jsCode": "const posts = $input.all().map(item => item.json);\n\nfunction getDaysOld(timestamp){\n  const now = Date.now();\n  const diff = now - timestamp;\n  return Math.floor(diff / (1000 * 60 * 60 * 24));\n}\n\nfunction detectContentType(post){\n  if(post.video) return \"video\";\n  if(post.postImages && post.postImages.length > 0) return \"image\";\n  return \"text\";\n}\n\nfunction extractImages(images){\n\n  if(!images || images.length === 0){\n    return {\n      images: \"\",\n      count: 0\n    };\n  }\n\n  const urls = images.map(img => img.url);\n\n  return {\n    images: urls.join(\"\\n\"), // clean format for Google Sheets\n    count: urls.length\n  };\n}\n\nfunction countHashtags(text){\n  if(!text) return 0;\n  const matches = text.match(/#\\w+/g);\n  return matches ? matches.length : 0;\n}\n\nfunction detectLinks(text){\n  if(!text) return false;\n  return /(https?:\\/\\/)/.test(text);\n}\n\n// Convert UTC timestamp to IST\nfunction getISTDate(timestamp){\n  return new Date(timestamp + (5.5 * 60 * 60 * 1000));\n}\n\nfunction getPostingDay(timestamp){\n  const date = getISTDate(timestamp);\n  return date.toLocaleString(\"en-US\", { weekday: \"long\" });\n}\n\nfunction getPostingHour(timestamp){\n  const date = getISTDate(timestamp);\n  return date.getHours();\n}\n\nfunction getTimeBucket(hour){\n\n  if(hour >= 5 && hour < 9) return \"Morning\";\n  if(hour >= 9 && hour < 12) return \"Late Morning\";\n  if(hour >= 12 && hour < 15) return \"Afternoon\";\n  if(hour >= 15 && hour < 18) return \"Evening\";\n  if(hour >= 18 && hour < 22) return \"Night\";\n\n  return \"Late Night\";\n}\n\nconst cleaned = posts.map(post => {\n\n  const likes = post.engagement?.likes || 0;\n  const comments = post.engagement?.comments || 0;\n  const shares = post.engagement?.shares || 0;\n\n  const totalEngagement = likes + comments + shares;\n\n  const engagementScore =\n    (likes * 1) +\n    (comments * 3) +\n    (shares * 5);\n\n  let performance = \"Low\";\n\n  if(engagementScore > 50) performance = \"High\";\n  else if(engagementScore > 20) performance = \"Medium\";\n\n  const postingHour = getPostingHour(post.postedAt.timestamp);\n\n  const images = extractImages(post.postImages);\n\n  return {\n\n    post_id: post.id,\n\n    linkedin_post_url: post.linkedinUrl,\n\n    post_content: post.content,\n\n    linkedin_profile_id: post.author?.publicIdentifier,\n\n    posted_date: getISTDate(post.postedAt.timestamp).toISOString().split(\"T\")[0],\n\n    posting_day: getPostingDay(post.postedAt.timestamp),\n\n    posting_hour: postingHour,\n\n    posting_time_bucket: getTimeBucket(postingHour),\n\n    posted_ageing_days: getDaysOld(post.postedAt.timestamp),\n\n    content_type: detectContentType(post),\n\n    post_images: images.images,\n\n    image_count: images.count,\n\n    has_links: detectLinks(post.content),\n\n    hashtags_count: countHashtags(post.content),\n\n    post_length: post.content ? post.content.length : 0,\n\n    post_likes: likes,\n\n    post_comments: comments,\n\n    post_shares: shares,\n\n    total_engagement: totalEngagement,\n\n    engagement_score: engagementScore,\n\n    post_performance: performance\n\n  };\n\n});\n\nreturn cleaned.map(i => ({ json: i }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        368,
+        16
+      ],
+      "id": "b78138a4-ee76-4a60-a8d0-f4df322b58dd",
+      "name": "Clean and Prepare the data"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "channelId": "={{ $json.channel_id }}"
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        368,
+        -368
+      ],
+      "id": "fb83103a-99d6-4024-bada-4194c256e96b",
+      "name": "Get Channel details",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "MJIRrOYvzihyq8da",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        592,
+        -608
+      ],
+      "id": "9d92adc1-5eed-4705-a8c7-a7030e96ce72",
+      "name": "Loop for many videos"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "get",
+        "videoId": "={{ $json.Video_id }}",
+        "part": [
+          "statistics",
+          "status",
+          "id"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        816,
+        -608
+      ],
+      "id": "95e7c03a-180e-4ab8-8fcc-b2655957e166",
+      "name": "Get YT Video details",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "MJIRrOYvzihyq8da",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Shop Transformation Videos- Youtube Videos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 418807866,
+          "mode": "list",
+          "cachedResultName": "Sheet5",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=418807866"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "linkedin_profile_url": "={{ $json.inputUrl }}",
+            "Date for analysis": "={{ $('Monthly Review with Date').first().json['Readable date'] }}",
+            "apify_tracking_id": "={{ $json.trackingId }}",
+            "linkedin_profile_id": "={{ $json.profileId }}",
+            "location": "={{ $json.geoLocationName }}",
+            "Verification": "={{ $json.isVerified }}",
+            "connection_count": "={{ $json.connectionsCount }}",
+            "followers_count": "={{ $json.followerCount }}",
+            "linkedin_account_created_date": "={{ $json.created.toDateTime().format('dd-MM-yyyy') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "linkedin_profile_url",
+              "displayName": "linkedin_profile_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date for analysis",
+              "displayName": "Date for analysis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "apify_tracking_id",
+              "displayName": "apify_tracking_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "linkedin_profile_id",
+              "displayName": "linkedin_profile_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "location",
+              "displayName": "location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "followers_count",
+              "displayName": "followers_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "connection_count",
+              "displayName": "connection_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Verification",
+              "displayName": "Verification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "linkedin_account_created_date",
+              "displayName": "linkedin_account_created_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "useAppend": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        592,
+        -176
+      ],
+      "id": "2af2c723-59c7-41cb-a5c1-1b9157962b84",
+      "name": "Records data for LinkedIn Profile",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "12esgrSwV1ZFou7v",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Shop Transformation Videos- Youtube Videos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 369797184,
+          "mode": "list",
+          "cachedResultName": "Channel_Performance_Analysis",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=369797184"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "title": "={{ $json.snippet.title }}",
+            "custom_url": "={{ $json.snippet.customUrl }}",
+            "channel_created_date": "={{ $json.snippet.publishedAt }}",
+            "video_count": "={{ $json.statistics.videoCount }}",
+            "subscriber_count": "={{ $json.statistics.subscriberCount }}",
+            "channel_id": "={{ $json.id }}",
+            " view_count": "={{ $json.statistics.viewCount }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "channel_id",
+              "displayName": "channel_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "custom_url",
+              "displayName": "custom_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "channel_created_date",
+              "displayName": "channel_created_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "video_count",
+              "displayName": "video_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "subscriber_count",
+              "displayName": "subscriber_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": " view_count",
+              "displayName": " view_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "useAppend": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        592,
+        -368
+      ],
+      "id": "d1e95446-fe28-4fdc-9fef-ac7165239806",
+      "name": "Add in YT channel Database",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "12esgrSwV1ZFou7v",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Shop Transformation Videos- Youtube Videos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1444001982,
+          "mode": "list",
+          "cachedResultName": "Copy of Linkedin_Profile_Stats",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=1444001982"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "post_id": "={{ $json.post_id }}",
+            "linkedin_post_url": "={{ $json.linkedin_post_url }}",
+            "post_content": "={{ $json.post_content }}",
+            "linkedin_profile_id": "={{ $json.linkedin_profile_id }}",
+            "posted_date": "={{ $json.posted_date }}",
+            "post_day": "={{ $json.posting_day }}",
+            "posting_hour": "={{ $json.posting_hour }}",
+            "posted_ageing_days": "={{ $json.posted_ageing_days }}",
+            "content_type": "={{ $json.content_type }}",
+            "has_links": "={{ $json.has_links }}",
+            "hashtags_count": "={{ $json.hashtags_count }}",
+            "post_lenght": "={{ $json.post_length }}",
+            "post_images": "={{ $json.post_images }}",
+            "post_comments": "={{ $json.post_comments }}",
+            "post_shares": "={{ $json.post_shares }}",
+            "total_engagement": "={{ $json.total_engagement }}",
+            "engagement_score": "={{ $json.engagement_score }}",
+            "post_performance": "={{ $json.post_performance }}",
+            "posting_time_bucket": "={{ $json.posting_time_bucket }}",
+            "post_likes": "={{ $json.post_likes }}",
+            "image_count": "={{ $json.image_count }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "post_id",
+              "displayName": "post_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "linkedin_post_url",
+              "displayName": "linkedin_post_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "post_content",
+              "displayName": "post_content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "linkedin_profile_id",
+              "displayName": "linkedin_profile_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "posted_date",
+              "displayName": "posted_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "post_day",
+              "displayName": "post_day",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "posting_hour",
+              "displayName": "posting_hour",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "posted_ageing_days",
+              "displayName": "posted_ageing_days",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "content_type",
+              "displayName": "content_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "has_links",
+              "displayName": "has_links",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "post_lenght",
+              "displayName": "post_lenght",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hashtags_count",
+              "displayName": "hashtags_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "post_images",
+              "displayName": "post_images",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "posting_time_bucket",
+              "displayName": "posting_time_bucket",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "post_likes",
+              "displayName": "post_likes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "post_comments",
+              "displayName": "post_comments",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "post_shares",
+              "displayName": "post_shares",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total_engagement",
+              "displayName": "total_engagement",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "engagement_score",
+              "displayName": "engagement_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "post_performance",
+              "displayName": "post_performance",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "image_count",
+              "displayName": "image_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "useAppend": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        592,
+        16
+      ],
+      "id": "9782e2f1-9481-4652-9387-8fd092603b25",
+      "name": "Add in Linkedin post scraper database",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "12esgrSwV1ZFou7v",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Shop Transformation Videos- Youtube Videos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 711088902,
+          "mode": "list",
+          "cachedResultName": "Performance_Analysis",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_GOOGLE_SHEET_ID/edit#gid=711088902"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Video_id": "={{ $json.id }}",
+            "View count": "={{ $json.statistics.viewCount }}",
+            "Like count": "={{ $json.statistics.likeCount }}",
+            "dislike_count": "={{ $json.statistics.dislikeCount }}",
+            "favourite_count": "={{ $json.statistics.favoriteCount }}",
+            "comment_count": "={{ $json.statistics.commentCount }}",
+            "video_title": "={{ $json.localizations.es.title }}"
+          },
+          "matchingColumns": [
+            "Video_id"
+          ],
+          "schema": [
+            {
+              "id": "Video_id",
+              "displayName": "Video_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "video_title",
+              "displayName": "video_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "View count",
+              "displayName": "View count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Like count",
+              "displayName": "Like count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "dislike_count",
+              "displayName": "dislike_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "favourite_count",
+              "displayName": "favourite_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "comment_count",
+              "displayName": "comment_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1040,
+        -592
+      ],
+      "id": "f0ab26ef-86e6-46a6-9056-1a64fe3e7e65",
+      "name": "Update YT video  Database",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "12esgrSwV1ZFou7v",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "Analysis_content",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        -832
+      ],
+      "id": "40fcbff5-785f-4048-9d14-02ce1f1af994",
+      "name": "Combine it for final"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        816,
+        -864
+      ],
+      "id": "ca664524-4ea0-4574-a639-b3291d98a3b2",
+      "name": "Collect all output"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json.Analysis_content;\n\nconst youtubeVideos = [];\nconst youtubeChannel = [];\nconst linkedinProfile = [];\nconst linkedinPosts = [];\n\nfor (const item of input) {\n\n  // YouTube Video Data\n  if (item.Video_id) {\n    youtubeVideos.push({\n      video_id: item.Video_id,\n      view_count: Number(item[\"View count\"] || 0),\n      like_count: Number(item[\"Like count\"] || 0),\n      dislike_count: Number(item.dislike_count || 0),\n      favourite_count: Number(item.favourite_count || 0),\n      comment_count: Number(item.comment_count || 0)\n    });\n  }\n\n  // YouTube Channel Data\n  else if (item.channel_id) {\n    youtubeChannel.push({\n      channel_id: item.channel_id,\n      title: item.title,\n      custom_url: item.custom_url,\n      channel_created_date: item.channel_created_date,\n      video_count: Number(item.video_count || 0),\n      subscriber_count: Number(item.subscriber_count || 0),\n      view_count: Number(item[\" view_count\"] || 0)\n    });\n  }\n\n  // LinkedIn Profile Data\n  else if (item.linkedin_profile_url) {\n    linkedinProfile.push({\n      linkedin_profile_url: item.linkedin_profile_url,\n      linkedin_profile_id: item.linkedin_profile_id,\n      location: item.location,\n      verification: item.Verification,\n      connection_count: item.connection_count,\n      followers_count: item.followers_count,\n      linkedin_account_created_date: item.linkedin_account_created_date\n    });\n  }\n\n  // LinkedIn Post Data\n  else if (item.post_id) {\n    linkedinPosts.push({\n      post_id: item.post_id,\n      linkedin_post_url: item.linkedin_post_url,\n      post_content: item.post_content,\n      posted_date: item.posted_date,\n      post_day: item.post_day,\n      posting_hour: item.posting_hour,\n      posting_time_bucket: item.posting_time_bucket,\n      posted_ageing_days: item.posted_ageing_days,\n      content_type: item.content_type,\n      has_links: item.has_links,\n      hashtags_count: item.hashtags_count,\n      post_length: item.post_lenght,\n      image_count: item.image_count,\n      post_likes: item.post_likes,\n      post_comments: item.post_comments,\n      post_shares: item.post_shares,\n      total_engagement: item.total_engagement,\n      engagement_score: item.engagement_score,\n      post_performance: item.post_performance\n    });\n  }\n\n}\n\nreturn [\n  {\n    json: {\n      youtube_videos: youtubeVideos,\n      youtube_channel: youtubeChannel,\n      linkedin_profile: linkedinProfile,\n      linkedin_posts: linkedinPosts\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1264,
+        -832
+      ],
+      "id": "4d204619-7848-4be1-b8a4-877e0c7ffbe5",
+      "name": "Prepare the Data"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\nconst youtubeVideos = data.youtube_videos || [];\nconst youtubeChannel = data.youtube_channel?.[0] || {};\nconst linkedinProfile = data.linkedin_profile?.[0] || {};\nconst linkedinPosts = data.linkedin_posts || [];\n\n\n/* =============================\nYOUTUBE ANALYSIS\n============================= */\n\nconst totalVideoViews = youtubeVideos.reduce((sum,v)=> sum + (v.view_count || 0),0);\nconst totalVideoLikes = youtubeVideos.reduce((sum,v)=> sum + (v.like_count || 0),0);\nconst totalVideoComments = youtubeVideos.reduce((sum,v)=> sum + (v.comment_count || 0),0);\n\nconst youtube = {\n\n  // Channel Info\n  channel_id: youtubeChannel.channel_id,\n  channel_title: youtubeChannel.title,\n  custom_url: youtubeChannel.custom_url,\n  channel_created_date: youtubeChannel.channel_created_date,\n  subscriber_count: youtubeChannel.subscriber_count,\n  channel_total_views: youtubeChannel.view_count,\n  channel_total_videos: youtubeChannel.video_count,\n\n  // Scraped Video Data\n  total_videos_scraped: youtubeVideos.length,\n\n  // Aggregated Metrics\n  total_video_views: totalVideoViews,\n  total_video_likes: totalVideoLikes,\n  total_video_comments: totalVideoComments,\n\n  avg_views_per_video: youtubeVideos.length\n    ? Math.round(totalVideoViews / youtubeVideos.length)\n    : 0,\n\n  avg_likes_per_video: youtubeVideos.length\n    ? Math.round(totalVideoLikes / youtubeVideos.length)\n    : 0,\n\n  avg_comments_per_video: youtubeVideos.length\n    ? Math.round(totalVideoComments / youtubeVideos.length)\n    : 0,\n\n  videos: youtubeVideos\n};\n\n\n/* =============================\nLINKEDIN ANALYSIS\n============================= */\n\n// Basic post metrics\nconst totalPosts = linkedinPosts.length;\n\nconst totalLikes = linkedinPosts.reduce((sum,p)=> sum + (p.post_likes || 0),0);\nconst totalComments = linkedinPosts.reduce((sum,p)=> sum + (p.post_comments || 0),0);\nconst totalShares = linkedinPosts.reduce((sum,p)=> sum + (p.post_shares || 0),0);\n\nconst avgEngagement = totalPosts\n  ? Math.round(linkedinPosts.reduce((sum,p)=> sum + (p.total_engagement || 0),0) / totalPosts)\n  : 0;\n\n\n// Best performing post\nconst bestPost = [...linkedinPosts].sort(\n  (a,b)=> (b.engagement_score || 0) - (a.engagement_score || 0)\n)[0] || {};\n\n\n// Best posting day calculation\nconst dayCount = {};\n\nlinkedinPosts.forEach(p=>{\n  dayCount[p.post_day] = (dayCount[p.post_day] || 0) + (p.total_engagement || 0);\n});\n\nconst bestDay = Object.keys(dayCount).sort((a,b)=> dayCount[b] - dayCount[a])[0] || \"\";\n\n\n// Profile age calculation (handles DD-MM-YYYY)\nlet profileAge = \"Unknown\";\n\nif (linkedinProfile.linkedin_account_created_date){\n\n  const parts = linkedinProfile.linkedin_account_created_date.split(\"-\");\n  const created = new Date(parts[2], parts[1]-1, parts[0]);\n  const now = new Date();\n\n  const diffYears = now.getFullYear() - created.getFullYear();\n\n  profileAge = `${diffYears} years`;\n}\n\n\n// Final LinkedIn Object\nconst linkedin = {\n\n  profile: {\n    profile_id: linkedinProfile.linkedin_profile_id,\n    profile_url: linkedinProfile.linkedin_profile_url,\n    location: linkedinProfile.location,\n    followers: linkedinProfile.followers_count,\n    connections: linkedinProfile.connection_count,\n\n    account_creation_date:\n      linkedinProfile.linkedin_account_created_date || \"Not provided\",\n\n    profile_age: profileAge\n  },\n\n  analytics: {\n    total_posts_analyzed: totalPosts,\n    total_likes: totalLikes,\n    total_comments: totalComments,\n    total_shares: totalShares,\n    avg_post_engagement: avgEngagement,\n\n    best_post_id: bestPost.post_id || \"\",\n    best_post_score: bestPost.engagement_score || 0,\n    best_post_day: bestDay\n  },\n\n  posts: linkedinPosts.map(p => ({\n    post_id: p.post_id,\n    post_url: p.linkedin_post_url,\n    post_content: p.post_content,\n    posted_date: p.posted_date,\n    post_day: p.post_day,\n    posting_hour: p.posting_hour,\n    posting_time_bucket: p.posting_time_bucket,\n    content_type: p.content_type,\n    hashtags_count: p.hashtags_count,\n    post_length: p.post_length,\n    image_count: p.image_count,\n    has_links: p.has_links,\n    post_likes: p.post_likes,\n    post_comments: p.post_comments,\n    post_shares: p.post_shares,\n    total_engagement: p.total_engagement,\n    engagement_score: p.engagement_score,\n    post_performance: p.post_performance\n  }))\n};\n\n\nreturn [\n{\njson:{\nyoutube,\nlinkedin\n}\n}\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        -832
+      ],
+      "id": "176bea41-7b4b-4d80-9f15-16bcb64ec667",
+      "name": "Separate it for YT and LinkedIn"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=This is the Youtube data for my channel and shorts video:\n\n{{ JSON.stringify($json.youtube) }}\n\n{{ JSON.stringify($json.youtube.videos) }}",
+        "options": {
+          "systemMessage": "=Role & Purpose\nYou are a YouTube analytics analyst AI agent. Your job is to analyze structured YouTube channel and video data provided in JSON format and generate a comprehensive analysis dataset that can later be converted into a report. Your responsibility is to extract meaningful metrics, evaluate performance indicators, and generate structured insights about channel performance, engagement, and growth potential.\n\nCapabilities\n\u2022 Analyze YouTube channel data including channel title, channel ID, creation date, subscribers, total views, and video count.\n\u2022 Evaluate individual video performance metrics such as views, likes, comments, dislikes, and favorites.\n\u2022 Calculate aggregated statistics including total views, total likes, total comments, and average metrics per video.\n\u2022 Compute engagement indicators such as like rate, comment rate, engagement rate, and growth indicators.\n\u2022 Identify top-performing and lowest-performing videos based on engagement and views.\n\u2022 Evaluate channel growth indicators such as subscriber-to-view ratio and views per subscriber.\n\u2022 Generate analytical insights explaining what the metrics suggest about the channel's performance.\n\u2022 Provide strategic recommendations to improve engagement and channel growth.\n\nTools:\n\nCalculator:\nUse the calculator tool whenever performing any mathematical calculation.\n\nThe calculator must be used for:\n\u2022 Average views per video\n\u2022 Average likes per video\n\u2022 Average comments per video\n\u2022 Like-to-view ratio\n\u2022 Comment-to-view ratio\n\u2022 Engagement rate\n\u2022 Views per subscriber\n\u2022 Subscriber-to-view ratio\n\u2022 Any other numeric computation\n\nNever estimate or mentally calculate numeric values. Always call the calculator tool and use its output.\n\nInteraction Style\n\u2022 Respond in a structured analytical format using clear sections.\n\u2022 Use concise professional language suitable for marketing or social media analytics reports.\n\u2022 Focus on metrics and insights rather than storytelling.\n\u2022 Present outputs in logical sections that can later be rendered into HTML reports or dashboards.\n\nOutput Structure\nAlways structure the output into the following sections:\n\n1. Channel Overview\nInclude:\n- Channel Title\n- Channel ID\n- Custom URL\n- Channel Created Date\n- Channel Age (calculated)\n- Subscriber Count\n- Total Channel Views\n- Total Videos on Channel\n\n2. Video Performance Metrics\nFor each video include:\n- Video ID\n- View Count\n- Like Count\n- Comment Count\n- Dislike Count\n- Favourite Count\n\n3. Aggregated Video Statistics\nCalculate using the calculator tool:\n- Total Videos Analyzed\n- Total Video Views\n- Total Video Likes\n- Total Video Comments\n- Average Views per Video\n- Average Likes per Video\n- Average Comments per Video\n\n4. Engagement Analysis\nCalculate using the calculator tool:\n- Like-to-View Ratio\n- Comment-to-View Ratio\n- Engagement Rate\n\n5. Video Performance Ranking\nIdentify:\n- Best Performing Video\n- Lowest Performing Video\n- Reason for performance (views or engagement)\n\n6. Channel Growth Indicators\nCalculate using the calculator tool:\n- Views per Subscriber\n- Subscriber-to-View Ratio\n- Growth potential observations\n\n7. Content Performance Insights\nProvide insights such as:\n- Audience engagement quality\n- Content performance patterns\n- Viewer interaction behavior\n\n8. Strategic Recommendations\nProvide actionable recommendations such as:\n- Increasing upload frequency\n- Improving engagement calls-to-action\n- Optimizing thumbnails or titles\n- Strengthening content consistency\n\nNotes\n\u2022 Always use the calculator tool for numeric calculations.\n\u2022 Never estimate or approximate numbers.\n\u2022 Base all calculations strictly on the provided data.\n\u2022 If data required for a metric is missing, clearly state that it cannot be calculated.\n\u2022 The output must be structured and ready to be converted into HTML reports or dashboards.\n\nCurrent Date and Time: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1712,
+        -1136
+      ],
+      "id": "7066fd9a-c570-4fac-839b-d44a18a7853e",
+      "name": "YT Data Analyzer"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=This is the Linkedin data for the Profile and post:\n\n{{ JSON.stringify($json.linkedin.profile) }}\n\n{{ JSON.stringify($json.linkedin.analytics) }}\n\n{{ JSON.stringify($json.linkedin.posts) }}",
+        "options": {
+          "systemMessage": "=Role & Purpose\nYou are a LinkedIn social media analytics analyst AI agent. Your job is to analyze structured LinkedIn profile and post performance data provided in JSON format and generate a comprehensive analysis dataset. Your responsibility is to extract meaningful metrics, evaluate content performance, identify engagement patterns, and generate structured insights about the LinkedIn profile\u2019s content strategy and audience interaction.\n\nCapabilities\n\u2022 Analyze LinkedIn profile data including profile ID, profile URL, followers, connections, location, and account creation date.\n\u2022 Evaluate individual LinkedIn post performance metrics such as likes, comments, shares, total engagement, and engagement score.\n\u2022 Analyze content attributes such as hashtags, content length, media usage, and links within posts.\n\u2022 Calculate aggregated statistics including total engagement, total likes, comments, and shares across all posts.\n\u2022 Identify top-performing posts and lowest-performing posts based on engagement metrics.\n\u2022 Analyze posting behavior including posting day, posting hour, and posting time buckets.\n\u2022 Detect content performance patterns such as which type of posts perform better (image posts, text posts, etc.).\n\u2022 Generate insights about audience interaction and engagement behavior.\n\u2022 Provide strategic recommendations to improve LinkedIn content performance.\n\nTools\nCalculator Tool\nUse the calculator tool whenever performing mathematical or numeric calculations.\n\nThe calculator tool must be used for:\n\u2022 Average engagement per post\n\u2022 Average likes per post\n\u2022 Average comments per post\n\u2022 Engagement rate per post\n\u2022 Engagement score comparisons\n\u2022 Performance distribution calculations\n\u2022 Hashtag effectiveness ratios\n\u2022 Content performance comparisons\n\u2022 Any other numerical computation required for the report\n\nNever estimate numbers manually. Always call the calculator tool for calculations.\n\nInteraction Style\n\u2022 Respond in a structured analytical format using clear sections.\n\u2022 Use concise professional language suitable for marketing, creator analytics, or social media performance reports.\n\u2022 Focus on data-driven insights rather than storytelling.\n\u2022 Present outputs in logical sections that can later be rendered into HTML reports or dashboards.\n\nOutput Structure\nAlways structure the output into the following sections:\n\n1. Profile Overview\nInclude:\n- LinkedIn Profile ID\n- Profile URL\n- Location\n- Followers Count\n- Connections Count\n- Account Creation Date\n- Profile Age (calculated using calculator tool)\n\n2. Post Performance Metrics\nFor each post include:\n- Post ID\n- Post URL\n- Post Content\n- Posted Date\n- Posting Day\n- Posting Hour\n- Posting Time Bucket\n- Content Type (text, image, video if available)\n- Hashtags Count\n- Post Length\n- Image Count\n- Has Links\n- Likes\n- Comments\n- Shares\n- Total Engagement\n- Engagement Score\n- Post Performance Rating\n\n3. Aggregated Post Statistics\nCalculate using the calculator tool:\n- Total Posts Analyzed\n- Total Likes\n- Total Comments\n- Total Shares\n- Total Engagement\n- Average Engagement per Post\n- Average Likes per Post\n- Average Comments per Post\n\n4. Engagement Analysis\nCalculate using the calculator tool:\n- Engagement Rate per Post\n- Engagement Distribution across posts\n- Average Engagement Score\n\n5. Content Performance Analysis\nAnalyze:\n- Performance by content type (image vs text posts)\n- Impact of hashtags on engagement\n- Impact of post length on engagement\n- Impact of links on engagement\n- Impact of media (images/videos) on engagement\n\n6. Posting Behavior Analysis\nAnalyze:\n- Best Performing Posting Day\n- Best Performing Posting Hour\n- Best Performing Time Bucket\n- Posting frequency patterns\n\n7. Top Performing Content\nIdentify:\n- Best Performing Post\n- Lowest Performing Post\n- Reason for performance (engagement, likes, comments)\n\n8. Audience Interaction Insights\nProvide insights such as:\n- Audience engagement behavior\n- Interaction patterns\n- Content formats that attract engagement\n\n9. Strategic Recommendations\nProvide actionable recommendations such as:\n- Optimal posting time strategy\n- Content format improvements\n- Hashtag usage recommendations\n- Media usage strategy\n- Engagement improvement suggestions\n\nNotes\n\u2022 Always use the calculator tool for numeric calculations.\n\u2022 Never estimate or approximate numbers manually.\n\u2022 Base all calculations strictly on the provided LinkedIn data.\n\u2022 If some metrics cannot be calculated due to missing data, clearly state that.\n\u2022 The output must be structured and ready to be converted into a report format such as HTML, dashboards, or automated reports.\n\nCurrent Date & Time : {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1712,
+        -640
+      ],
+      "id": "36ae1afd-212e-46c3-9b2b-950382ce03c8",
+      "name": "LinkedIn Data Analyzer"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.output;\n\n// Split into sections using numbers (1. 2. 3.)\nconst sections = raw.split(/\\n\\d+\\.\\s/).map(s => s.trim()).filter(Boolean);\n\nfunction parseList(section){\n  return section\n    .split(\"\\n\")\n    .map(line => line.replace(/^- /,\"\").trim())\n    .filter(Boolean);\n}\n\nconst cleaned = {\n  channel_overview: parseList(sections[0] || \"\"),\n  video_performance_metrics: parseList(sections[1] || \"\"),\n  aggregated_video_statistics: parseList(sections[2] || \"\"),\n  engagement_analysis: parseList(sections[3] || \"\"),\n  video_performance_ranking: parseList(sections[4] || \"\"),\n  channel_growth_indicators: parseList(sections[5] || \"\"),\n  content_performance_insights: parseList(sections[6] || \"\"),\n  strategic_recommendations: parseList(sections[7] || \"\")\n};\n\nreturn [{ json: cleaned }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2064,
+        -1040
+      ],
+      "id": "65cf6b22-2431-40e6-a24e-e42410c650e9",
+      "name": "Clean the YT data from Agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.output;\n\n// split sections\nconst sections = raw.split(/\\n\\d+\\.\\s/).map(s => s.trim()).filter(Boolean);\n\nfunction cleanLines(text){\n  return text\n    .split(\"\\n\")\n    .map(l => l.replace(/^- /,\"\").trim())\n    .filter(Boolean);\n}\n\n// -------- PROFILE OVERVIEW --------\nconst profile_overview = cleanLines(sections[0] || \"\");\n\n// -------- POSTS --------\nconst postsRaw = sections[1] || \"\";\nconst postBlocks = postsRaw.split(/Post \\d+:/).filter(Boolean);\n\nconst posts = postBlocks.map(block=>{\n  const lines = cleanLines(block);\n  const obj = {};\n\n  lines.forEach(line=>{\n    const parts = line.split(\":\");\n    const key = parts.shift().trim().toLowerCase().replace(/ /g,\"_\");\n    const value = parts.join(\":\").trim();\n    obj[key] = value;\n  });\n\n  return obj;\n});\n\n// -------- OTHER SECTIONS --------\nconst aggregated_post_statistics = cleanLines(sections[2] || \"\");\nconst engagement_analysis = cleanLines(sections[3] || \"\");\nconst content_performance_analysis = cleanLines(sections[4] || \"\");\nconst posting_behavior_analysis = cleanLines(sections[5] || \"\");\nconst top_performing_content = cleanLines(sections[6] || \"\");\nconst audience_interaction_insights = cleanLines(sections[7] || \"\");\nconst strategic_recommendations = cleanLines(sections[8] || \"\");\n\nreturn [\n{\njson:{\nprofile_overview,\nposts,\naggregated_post_statistics,\nengagement_analysis,\ncontent_performance_analysis,\nposting_behavior_analysis,\ntop_performing_content,\naudience_interaction_insights,\nstrategic_recommendations\n}\n}\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2064,
+        -640
+      ],
+      "id": "f106be2a-51b0-466f-9789-1ddb402cf89b",
+      "name": "Clean the LinkedIn data from agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\nfunction createListSection(title, items){\n  const clean = items.slice(1); // remove duplicate heading\n  const list = clean.map(i => `<li>${i}</li>`).join(\"\");\n  return `\n  <section>\n    <h2>${title}</h2>\n    <ul>${list}</ul>\n  </section>\n  `;\n}\n\n// POSTS TABLE\nconst posts = data.posts.filter(p => p.post_id);\n\nconst postsTable = posts.map(p => `\n<tr>\n<td>${p.post_id}</td>\n<td><a href=\"${p.post_url}\" target=\"_blank\">View Post</a></td>\n<td>${p.posting_day}</td>\n<td>${p.posting_hour}</td>\n<td>${p.content_type}</td>\n<td>${p.likes}</td>\n<td>${p.comments}</td>\n<td>${p.total_engagement}</td>\n<td>${p.engagement_score}</td>\n<td>${p.post_performance_rating}</td>\n</tr>\n`).join(\"\");\n\nconst html = `\n<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<title>LinkedIn Analytics Report</title>\n\n<style>\n\nbody{\nfont-family: Arial, Helvetica, sans-serif;\nbackground:#f5f6fa;\nmargin:40px;\ncolor:#333;\n}\n\n.container{\nbackground:white;\npadding:30px;\nborder-radius:10px;\nbox-shadow:0 4px 12px rgba(0,0,0,0.1);\n}\n\nh1{\ntext-align:center;\ncolor:#2c3e50;\n}\n\nh2{\nmargin-top:30px;\nborder-bottom:2px solid #eee;\npadding-bottom:6px;\ncolor:#34495e;\n}\n\nul{\nmargin-top:10px;\nline-height:1.7;\n}\n\ntable{\nwidth:100%;\nborder-collapse:collapse;\nmargin-top:20px;\n}\n\nth, td{\npadding:10px;\nborder:1px solid #ddd;\ntext-align:left;\n}\n\nth{\nbackground:#2c3e50;\ncolor:white;\n}\n\ntr:nth-child(even){\nbackground:#f2f2f2;\n}\n\n.footer{\nmargin-top:40px;\ntext-align:center;\nfont-size:12px;\ncolor:#888;\n}\n\n</style>\n\n</head>\n\n<body>\n\n<div class=\"container\">\n\n<h1>LinkedIn Profile Analytics Report</h1>\n\n${createListSection(\"Profile Overview\", data.profile_overview)}\n\n<section>\n<h2>Post Performance Metrics</h2>\n\n<table>\n\n<tr>\n<th>Post ID</th>\n<th>Post Link</th>\n<th>Day</th>\n<th>Hour</th>\n<th>Content Type</th>\n<th>Likes</th>\n<th>Comments</th>\n<th>Total Engagement</th>\n<th>Engagement Score</th>\n<th>Performance</th>\n</tr>\n\n${postsTable}\n\n</table>\n\n</section>\n\n${createListSection(\"Aggregated Post Statistics\", data.aggregated_post_statistics)}\n\n${createListSection(\"Engagement Analysis\", data.engagement_analysis)}\n\n${createListSection(\"Content Performance Analysis\", data.content_performance_analysis)}\n\n${createListSection(\"Posting Behavior Analysis\", data.posting_behavior_analysis)}\n\n${createListSection(\"Top Performing Content\", data.top_performing_content)}\n\n${createListSection(\"Audience Interaction Insights\", data.audience_interaction_insights)}\n\n${createListSection(\"Strategic Recommendations\", data.strategic_recommendations)}\n\n<div class=\"footer\">\nLinkedIn Analytics Report \u2022 Generated Automatically by AI Social Media Analysis System\n</div>\n\n</div>\n\n</body>\n</html>\n`;\n\nreturn [\n{\njson:{\nlinkedin_html_report: html\n}\n}\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2288,
+        -640
+      ],
+      "id": "024b5a29-cd49-4484-973f-7a776125b83f",
+      "name": "Prepare HTML Report Code for LinkedIn"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\nfunction createSection(title, items) {\n  const cleanItems = items.slice(1); // remove repeated section title\n  const list = cleanItems.map(i => `<li>${i}</li>`).join(\"\");\n  return `\n    <section>\n      <h2>${title}</h2>\n      <ul>\n        ${list}\n      </ul>\n    </section>\n  `;\n}\n\nconst html = `\n<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<title>YouTube Analytics Report</title>\n\n<style>\n\nbody{\n  font-family: Arial, Helvetica, sans-serif;\n  margin:40px;\n  background:#f7f7f7;\n  color:#333;\n}\n\n.container{\n  background:white;\n  padding:30px;\n  border-radius:8px;\n  box-shadow:0 2px 10px rgba(0,0,0,0.1);\n}\n\nh1{\n  text-align:center;\n  color:#2c3e50;\n}\n\nh2{\n  margin-top:30px;\n  color:#34495e;\n  border-bottom:2px solid #eee;\n  padding-bottom:6px;\n}\n\nul{\n  margin-top:10px;\n  line-height:1.7;\n}\n\nli{\n  margin-bottom:6px;\n}\n\n.footer{\n  margin-top:40px;\n  text-align:center;\n  font-size:12px;\n  color:#777;\n}\n\n</style>\n\n</head>\n\n<body>\n\n<div class=\"container\">\n\n<h1>YouTube Channel Analysis Report</h1>\n\n${createSection(\"Channel Overview\", data.channel_overview)}\n${createSection(\"Video Performance Metrics\", data.video_performance_metrics)}\n${createSection(\"Aggregated Video Statistics\", data.aggregated_video_statistics)}\n${createSection(\"Engagement Analysis\", data.engagement_analysis)}\n${createSection(\"Video Performance Ranking\", data.video_performance_ranking)}\n${createSection(\"Channel Growth Indicators\", data.channel_growth_indicators)}\n${createSection(\"Content Performance Insights\", data.content_performance_insights)}\n${createSection(\"Strategic Recommendations\", data.strategic_recommendations)}\n\n<div class=\"footer\">\nReport generated automatically by AI Analytics System\n</div>\n\n</div>\n\n</body>\n</html>\n`;\n\nreturn [\n{\njson:{\nhtml_report: html\n}\n}\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2288,
+        -1040
+      ],
+      "id": "5c346fc0-f58f-4f8a-8409-28e9a6ef8dfd",
+      "name": "Prepare HTML Code for YT"
+    },
+    {
+      "parameters": {
+        "sendTo": "your-email@gmail.com",
+        "subject": "=Your Youtube Report for month {{ $now.monthLong }}{{ $now.year }}",
+        "message": "={{ $json.html_report }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2512,
+        -1040
+      ],
+      "id": "e4d24187-1191-4846-9f95-2f81134d4520",
+      "name": "Send the YT Report Email",
+      "webhookId": "2d2b85bc-8075-450b-b5d4-df4d551328d4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kPN75ffgJpAs17Dd",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "your-email@gmail.com",
+        "subject": "=Your LinkedIn Report for month {{ $now.monthLong }}{{ $now.year }}",
+        "message": "={{ $json.linkedin_html_report }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2512,
+        -640
+      ],
+      "id": "6367ed43-8c1e-4a0e-b17a-b17d8848836b",
+      "name": "Send the LinkedIn Report in Email",
+      "webhookId": "296b0eb6-98bc-4100-b59b-93edfd4c3a5c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kPN75ffgJpAs17Dd",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# YT & LinkedIn AI Emplyoee system Important Guide:\n\n- First Import the JSON template in n8n and if you do not know how to import see the Youtube video for importing in n8n for JSON template.\n\n- This system is schedule to work for a monthly basis so for date at the end of month it will get activated (Means 30th of every month).\n\n- It collects the Weekly YT videos details and get the channel details and store them in Google Sheets for database.\n\n- For LinkedIn it collects the Profile statistics and post for the month posted on LinkedIn (Remeber to fine tune the Apify actor to get post as per your needs).\n\n- At the last it sends a Beautiful HTML Report in Gmail every month.\n\n# Setup required for this AI Employee:\n\nGoogle Sheets templates:\n\nDownload the Google Sheets template you have to add for your database you can modify the sheets by downloading as per your need and data scarped by the Apify Actor.\n\nNode Name: Update YT video  Database - https://docs.google.com/spreadsheets/d/1SkAJjekfSQOU8OC38n4Q8glB47Pn_zMFpWp5yhzV3cU/edit?usp=sharing\n\nNode Name: Add in YT channel Database - \nhttps://docs.google.com/spreadsheets/d/1FX6kBiwx8CScW9ck8dd6jCfvKK7NtP_NVlQxfVX9fUE/edit?usp=sharing\n\nNode Name: Records data for LinkedIn Profile -\n\nhttps://docs.google.com/spreadsheets/d/1X4NA4L0IdWT5GOJ5LARL9Evz-Xuk1Of5xrbVJoBrkUs/edit?usp=sharing\n\nNode Name: Add in Linkedin post scraper database - \n\nhttps://docs.google.com/spreadsheets/d/1SFySc4lOr9Yt2QcdhzP9qKfRO5HyxgkW-FaZ2n2C_AU/edit?usp=sharing\n\n# Connect Important Credentials:\n\nGoogle Sheets & Youtube & Gmail - Just sign in if using n8n cloud / Client ID and Client Secret Key required (See any Youtube Video for creating Credentials)\n\nApify - Need to doenload the Node package and you can use with HTTP node as well. ( See Youtube related video for Apify as well.)\n\n\nApify Actors Used in this Automation:\n\nLinkedIn Profile Post Scraper: https://console.apify.com/actors/A3cAPGpwBEG8RJwse/input\n\nLinkedIn Profile Scraper : https://console.apify.com/actors/yZnhB5JewWf9xSmoM/input\n\nCopy the channel ID of your channel and add in Node Enter Channel ID",
+        "height": 1568,
+        "width": 704,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -976,
+        -1168
+      ],
+      "typeVersion": 1,
+      "id": "0413b428-55c2-4187-a61b-d799f30ec717",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "821b3f1f-2854-4ebc-b63c-d7826951c198",
+              "name": "channel_id",
+              "value": "<ENTER CHANNEL ID>",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        144,
+        -608
+      ],
+      "id": "66c79bcc-8468-46e0-8288-e19a468e4385",
+      "name": "Enter Channel ID"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        208,
+        656
+      ],
+      "id": "3f4c2ff8-43d1-4931-80c2-f84707d23102",
+      "name": "Manual Trigger"
+    },
+    {
+      "parameters": {
+        "returnAll": true,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        432,
+        656
+      ],
+      "id": "fde1325e-bab7-48b2-b0c2-217effb1cc38",
+      "name": "Get all Channel ID linked to account",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "MJIRrOYvzihyq8da",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Get Youtube channel ID - First Run this after all credentails setup for getting Channel ID\n\n",
+        "height": 416,
+        "width": 1104,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -144,
+        512
+      ],
+      "typeVersion": 1,
+      "id": "6fbee3c0-86aa-419b-a75f-a01d91385efd",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "821b3f1f-2854-4ebc-b63c-d7826951c198",
+              "name": "channel_id",
+              "value": "<ENTER CHANNEL ID>",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        160,
+        -368
+      ],
+      "id": "e140585e-ef1b-4900-9af1-cb23fc2d5a23",
+      "name": "Enter Channel ID1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get last week videos": {
+      "main": [
+        [
+          {
+            "node": "Loop for many videos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linkedin_account_scraping": {
+      "main": [
+        [
+          {
+            "node": "Records data for LinkedIn Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linkedin_post_scraper": {
+      "main": [
+        [
+          {
+            "node": "Clean and Prepare the data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "YT Data Analyzer",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn Data Analyzer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "YT Data Analyzer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator1": {
+      "ai_tool": [
+        [
+          {
+            "node": "LinkedIn Data Analyzer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Monthly Review with Date": {
+      "main": [
+        [
+          {
+            "node": "Linkedin_account_scraping",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Linkedin_post_scraper",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Enter Channel ID",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Enter Channel ID1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean and Prepare the data": {
+      "main": [
+        [
+          {
+            "node": "Add in Linkedin post scraper database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Channel details": {
+      "main": [
+        [
+          {
+            "node": "Add in YT channel Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop for many videos": {
+      "main": [
+        [
+          {
+            "node": "Collect all output",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get YT Video details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get YT Video details": {
+      "main": [
+        [
+          {
+            "node": "Update YT video  Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Records data for LinkedIn Profile": {
+      "main": [
+        [
+          {
+            "node": "Collect all output",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Add in YT channel Database": {
+      "main": [
+        [
+          {
+            "node": "Collect all output",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Add in Linkedin post scraper database": {
+      "main": [
+        [
+          {
+            "node": "Collect all output",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Update YT video  Database": {
+      "main": [
+        [
+          {
+            "node": "Loop for many videos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine it for final": {
+      "main": [
+        [
+          {
+            "node": "Prepare the Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect all output": {
+      "main": [
+        [
+          {
+            "node": "Combine it for final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare the Data": {
+      "main": [
+        [
+          {
+            "node": "Separate it for YT and LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separate it for YT and LinkedIn": {
+      "main": [
+        [
+          {
+            "node": "YT Data Analyzer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn Data Analyzer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YT Data Analyzer": {
+      "main": [
+        [
+          {
+            "node": "Clean the YT data from Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn Data Analyzer": {
+      "main": [
+        [
+          {
+            "node": "Clean the LinkedIn data from agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean the YT data from Agent": {
+      "main": [
+        [
+          {
+            "node": "Prepare HTML Code for YT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean the LinkedIn data from agent": {
+      "main": [
+        [
+          {
+            "node": "Prepare HTML Report Code for LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare HTML Report Code for LinkedIn": {
+      "main": [
+        [
+          {
+            "node": "Send the LinkedIn Report in Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare HTML Code for YT": {
+      "main": [
+        [
+          {
+            "node": "Send the YT Report Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enter Channel ID": {
+      "main": [
+        [
+          {
+            "node": "Get last week videos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get all Channel ID linked to account",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enter Channel ID1": {
+      "main": [
+        [
+          {
+            "node": "Get Channel details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "XZ07dnYCSz2Ot5T6",
+    "callerPolicy": "workflowsFromSameOwner",
+    "timezone": "Asia/Kolkata"
+  },
+  "versionId": "9e6624ae-c502-4047-b3d0-8f27d1b30787",
+  "meta": {},
+  "id": "NAqGNFpWXREpqcgw",
+  "tags": [
+    {
+      "updatedAt": "2026-03-11T14:34:12.412Z",
+      "createdAt": "2026-03-11T14:34:12.412Z",
+      "id": "RGXnfGTZLTu8SZHp",
+      "name": "Template Sharing"
+    }
+  ]
+}
